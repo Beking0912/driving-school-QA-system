@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" > 
+<mapper namespace="com.sc.springmvc.dao.PaperDao" > 
+<resultMap id="PaperMap" type="com.sc.springmvc.pojo.Paper" > 
+<id property="paper_id" column="id" jdbcType="INTEGER" /> 
+<result property="question_id_seq" column="question_id_seq" jdbcType="VARCHAR" /> 
+<result property="key_seq" column="key_seq" jdbcType="VARCHAR" /> 
+</resultMap> 
+
+<sql id="Base_Column_List" > 
+paper_id, question_id_seq, key_seq
+</sql> 
+
+<!-- 新增试卷 -->
+<insert id="addPaper">
+	<selectKey keyProperty="paper_id" resultType="int" order="BEFORE" >
+		select seq_paper_id.nextval from dual
+	</selectKey>
+	call pkg_combo.proc_addPaper(
+		#{paper_id,jdbcType=INTEGER},
+		#{question_id_seq,jdbcType=VARCHAR},
+		#{key_seq,jdbcType=VARCHAR}
+	)
+</insert>
+
+<select id="findPaper" statementType="CALLABLE" parameterType="java.util.Map" >
+		call pkg_combo.proc_findPaper(
+			#{paper_id, mode=IN, jdbcType=INTEGER},
+			#{result, jdbcType=CURSOR, mode=OUT, javaType=ResultSet, resultMap=PaperMap}
+		)
+</select>
+
+</mapper>

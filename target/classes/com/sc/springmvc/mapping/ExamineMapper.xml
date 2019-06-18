@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" > 
+<mapper namespace="com.sc.springmvc.dao.ExamineDao" > 
+<resultMap id="ExamineMap" type="com.sc.springmvc.pojo.Examine" > 
+<id property="id" column="id" jdbcType="INTEGER" /> 
+<result property="em_in" column="em_in" jdbcType="VARCHAR" /> 
+<result property="em_pwd" column="em_pwd" jdbcType="VARCHAR" /> 
+<result property="student" column="student" jdbcType="INTEGER" />
+<result property="answer" column="answer" jdbcType="VARCHAR" />
+<result property="score" column="score" jdbcType="INTEGER" />
+<result property="paper_id" column="paper_id" jdbcType="INTEGER" />
+<result property="em_date" column="em_date" jdbcType="DATE" />
+<result property="status" column="status" jdbcType="CHAR" /> 
+
+</resultMap> 
+
+<sql id="Base_Column_List" > 
+id, em_in, em_pwd, student, answer, score, paper_id, em_date, status
+</sql> 
+
+<!-- 新增答卷 -->
+<insert id="addExamine">
+	<selectKey keyProperty="id" resultType="int" order="BEFORE" >
+		select seq_examine_id.nextval from dual
+	</selectKey>
+	call pkg_combo.proc_addExamine(
+		#{id,jdbcType=INTEGER},
+		#{em_in,jdbcType=VARCHAR},
+		#{em_pwd,jdbcType=VARCHAR},
+		#{student,jdbcType=INTEGER},
+		#{answer,jdbcType=VARCHAR},
+		#{score,jdbcType=INTEGER},
+		#{paper_id,jdbcType=INTEGER},
+		#{em_date,jdbcType=DATE},
+		#{status,jdbcType=CHAR}
+	)
+</insert>
+
+<select id="findExamine" statementType="CALLABLE" parameterType="java.util.Map" >
+	call pkg_combo.proc_findExamine(
+		#{em_in, mode=IN, jdbcType=VARCHAR},
+		#{result, jdbcType=CURSOR, mode=OUT, javaType=ResultSet, resultMap=ExamineMap}
+	)
+</select>
+
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" > 
+<mapper namespace="com.sc.springmvc.dao.UserDao" > 
+<resultMap id="UserMap" type="com.sc.springmvc.pojo.User" > 
+<id property="user_id" column="user_id" jdbcType="INTEGER" /> 
+<result property="user_name" column="user_name" jdbcType="VARCHAR" /> 
+<result property="login_name" column="login_name" jdbcType="VARCHAR" /> 
+<result property="password" column="password" jdbcType="VARCHAR" /> 
+<result property="user_type" column="user_type" jdbcType="CHAR" /> 
+<result property="sts" column="sts" jdbcType="CHAR" /> 
+</resultMap> 
+
+<sql id="Base_Column_List" > 
+user_id, user_name, login_name, password, user_type, sts 
+</sql> 
+
+<select id="findUserById" resultMap="UserMap" parameterType="java.lang.Integer" > <!--注意此处是resultMap还是resultType-->
+select * from users where user_id = #{id}
+</select> 
+
+<!-- 通过用户名和密码查找用户 -->
+<select id="findUser" statementType="CALLABLE" parameterType="java.util.Map">
+		call pkg_combo.pro_findUser(
+			#{user_name1, mode=IN, jdbcType=VARCHAR},
+			#{password1, mode=IN, jdbcType=VARCHAR},
+			#{result, jdbcType=CURSOR, mode=OUT, javaType=ResultSet, resultMap=UserMap}
+		)
+</select>
+
+<!-- 新增用户 -->
+<insert id="addUser">
+	<selectKey keyProperty="user_id" resultType="int" order="BEFORE" >
+		select seq_user_id.nextval from dual
+	</selectKey>
+	call pkg_combo.proc_addUser(
+		#{user_id,jdbcType=INTEGER},
+		#{user_name,jdbcType=VARCHAR},
+		#{login_name,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},
+		#{user_type,jdbcType=CHAR},
+		#{sts,jdbcType=CHAR}
+	)
+</insert>
+
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" > 
+<mapper namespace="com.sc.springmvc.dao.StudentDao" > 
+<resultMap id="StudentMap" type="com.sc.springmvc.pojo.Student" > 
+<id property="id" column="id" jdbcType="INTEGER" /> 
+<result property="name" column="name" jdbcType="VARCHAR" /> 
+<result property="pin" column="pin" jdbcType="VARCHAR" /> 
+<result property="phone" column="phone" jdbcType="VARCHAR" /> 
+</resultMap> 
+
+<sql id="Base_Column_List" > 
+id, name, pin, phone
+</sql> 
+
+<!-- 通过id查找考生  -->
+<select id="findStudent" parameterType="java.lang.Integer" resultType="com.sc.springmvc.pojo.Student">
+	select *
+	from student
+	where id = #{id}
+</select>
+
+<!-- 新增考生 -->
+<insert id="addStudent">
+	<selectKey keyProperty="id" resultType="int" order="BEFORE" >
+		select seq_student_id.nextval from dual
+	</selectKey>
+	call pkg_combo.proc_addStudent(
+		#{id,jdbcType=INTEGER},
+		#{name,jdbcType=VARCHAR},
+		#{pin,jdbcType=VARCHAR},
+		#{phone,jdbcType=VARCHAR}
+	)
+</insert>
+
+</mapper>
