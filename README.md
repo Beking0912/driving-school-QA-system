@@ -1,4 +1,5 @@
-# oracle-jiaxiao-java
-课程项目-驾校答题系统-前后端代码（包含随机出卷考试与计分）
+# Driving School Q&A System
 
-主要技术栈：oracle + ssm + jsp
+[Course Project: Oracle] The front and back end code of **Driving School Q&A System**, including random examination and scoring.
+
+**Main technology stack：Oracle + ssm + jsp**
